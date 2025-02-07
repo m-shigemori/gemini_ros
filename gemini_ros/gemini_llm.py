@@ -14,21 +14,25 @@ class GeminiLLMNode(Node):
         self.client = genai.Client(api_key=api_key)
 
         self.subscription = self.create_subscription(
-            String, "gemini_llm_request", self.request_callback, 10
+            String, "gemini_llm_request", self.handle_llm_request, 10
         )
+        
         self.publisher = self.create_publisher(
             String, "gemini_llm_response", 10
         )
 
         self.get_logger().info("Gemini LLM が起動しました")
 
-    def request_callback(self, msg):
+    def handle_llm_request(self, msg):
+        self.request_callback(msg)
+
+    def publish_response(self, msg):
         self.get_logger().info(msg.data)
 
         response = self.client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=msg.data + "30文字以内で答えて",
-            config={
+            model = "gemini-2.0-flash",
+            contents = msg.data,
+            config = {
                 # "max_output_tokens": 30,
             }
         )
@@ -37,8 +41,7 @@ class GeminiLLMNode(Node):
         response_msg = String()
         response_msg.data = cleaned_response
         self.publisher.publish(response_msg)
-        # self.get_logger().info(cleaned_response)
-
+        self.get_logger().info(cleaned_response)
 
 def main():
     rclpy.init()
