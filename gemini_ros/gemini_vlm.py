@@ -50,9 +50,8 @@ class GeminiVLMNode(Node):
             }
         )
 
-        cleaned_response = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        response.output = cleaned_response
-        self.get_logger().info(f"Response: {cleaned_response}")
+        response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
+        self.get_logger().info(f"Response: {response.output}")
 
 
 def main():
