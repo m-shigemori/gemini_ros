@@ -2,7 +2,7 @@
 import os
 import rclpy
 from rclpy.node import Node
-from gemini_intergace.srv import GeminiRequest
+from gemini_interface.srv import GeminiRequest
 from google import genai
 
 

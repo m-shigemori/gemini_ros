@@ -2,7 +2,7 @@
 import os
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from gemini_interface.srv import GeminiRequest
 import sounddevice as sd
 import scipy.io.wavfile as wav
 from google import genai
@@ -19,19 +19,17 @@ class GeminiSTTNode(Node):
         self.duration = 5
         self.FILE_NAME = 'input.wav'
 
-        self.create_subscription(
-            String, '/gemini_stt_request', self.handle_stt_request, 10
+        # サービスの作成
+        self.srv = self.create_service(
+            GeminiRequest, '/gemini_stt_service', self.handle_stt_request
         )
 
-        self.response_publisher = self.create_publisher(
-            String, '/gemini_stt_response', 10
-        )
+        self.get_logger().info("Gemini STT サービスが起動しました")
 
-        self.get_logger().info("Gemini STT が起動しました")
-
-    def handle_stt_request(self, msg):
-            self.record_audio()
-            self.publish_response(msg)
+    def handle_stt_request(self, request, response):
+        self.record_audio()
+        self.process_audio_and_generate_response(request, response)
+        return response
 
     def record_audio(self):
         self.get_logger().info('Recording audio...')
@@ -39,23 +37,22 @@ class GeminiSTTNode(Node):
         sd.wait()
         wav.write(self.FILE_NAME, self.samplerate, audio_data)
 
-    def publish_response(self, msg):
+    def process_audio_and_generate_response(self, request, response):
+        # 音声ファイルをアップロード
         sound_file = self.client.files.upload(file=self.FILE_NAME)
 
-        response = self.client.models.generate_content(
-            model = 'gemini-2.0-flash',
-            contents = [msg.data, sound_file],
-            config = {
-                # "max_output_tokens": 30,
+        # Gemini APIを使ってコンテンツを生成
+        gemini_response = self.client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=[request.input, sound_file],
+            config={
+                # "max_output_tokens": 30,  # 必要に応じて設定
             }
         )
 
-        cleaned_response = response.text.replace('*', '').replace('\n', ' ').strip()
-        response_msg = String()
-        response_msg.data = cleaned_response
-        self.publisher.publish(response_msg)
-        self.get_logger().info(cleaned_response)
-
+        cleaned_response = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
+        response.output = cleaned_response
+        self.get_logger().info(f"Response: {cleaned_response}")
 
 def main():
     rclpy.init()

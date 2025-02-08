@@ -2,7 +2,7 @@
 import os
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
+from gemini_interface.srv import GeminiRequest
 import cv2
 import PIL.Image
 from google import genai
@@ -17,19 +17,17 @@ class GeminiVLMNode(Node):
 
         self.file_name = 'input.jpg'
 
-        self.subscription = self.create_subscription(
-            String, '/gemini_vlm_request', self.handle_vlm_request, 10
+        # サービスを作成
+        self.srv = self.create_service(
+            GeminiRequest, '/gemini_vlm_service', self.handle_vlm_request
         )
 
-        self.publisher = self.create_publisher(
-            String, '/gemini_vlm_response', 10
-        )
+        self.get_logger().info("Gemini VLM サービスが起動しました")
 
-        self.get_logger().info("Gemini VLM が起動しました")
-
-    def handle_vlm_request(self, msg):
+    def handle_vlm_request(self, request, response):
         self.capture_image()
-        self.publish_response(msg)
+        self.process_image_and_response(request, response)
+        return response
 
     def capture_image(self):
         cap = cv2.VideoCapture(0)
@@ -37,22 +35,20 @@ class GeminiVLMNode(Node):
         cap.release()
         cv2.imwrite(self.file_name, frame)
 
-    def publish_response(self, msg):
+    def process_image_and_response(self, request, response):
         image = PIL.Image.open(self.file_name)
 
-        response = self.client.models.generate_content(
-            model = "gemini-2.0-flash",
-            contents = [msg.data, image],
-            config = {
-                # "max_output_tokens": 30,
+        gemini_response = self.client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=[request.input, image],
+            config={
+                # "max_output_tokens": 30,  # 必要に応じて設定
             }
         )
 
-        cleaned_response = response.text.replace('*', '').replace('\n', ' ').strip()
-        response_msg = String()
-        response_msg.data = cleaned_response
-        self.publisher.publish(response_msg)
-        self.get_logger().info(cleaned_response)
+        cleaned_response = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
+        response.output = cleaned_response
+        self.get_logger().info(f"Response: {cleaned_response}")
 
 def main():
     rclpy.init()
