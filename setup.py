@@ -15,7 +15,7 @@ setup(
             'launch/gemini_vlm_launch.py',
         ]),
     ],
-    install_requires=['setuptools', 'gemini_interface'],  # gemini_interface の依存を追加
+    install_requires=['setuptools', 'gemini_interface'],
     zip_safe=False,
     maintainer='sobits',
     maintainer_email='sobits@todo.todo',

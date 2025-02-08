@@ -2,11 +2,12 @@
 import os
 import rclpy
 from rclpy.node import Node
+from sensor_msgs.msg import Image
 from gemini_interface.srv import GeminiRequest
 import cv2
 import PIL.Image
 from google import genai
-
+from cv_bridge import CvBridge
 
 class GeminiVLMNode(Node):
     def __init__(self):
@@ -34,10 +35,13 @@ class GeminiVLMNode(Node):
         return response
 
     def capture_image(self):
-        cap = cv2.VideoCapture(0)
-        ret, frame = cap.read()
-        cap.release()
-        cv2.imwrite(self.file_name, frame)
+        client = self.create_client(Image, '/camera/camera/color/image_raw')
+        future = client.call_async()
+        rclpy.spin_until_future_complete(self, future)
+        image_msg = future.result()
+
+        cv_image = CvBridge().imgmsg_to_cv2(image_msg)
+        cv2.imwrite(self.file_name, cv_image)
 
     def process_image_and_response(self, request, response):
         image = PIL.Image.open(self.file_name)
@@ -51,7 +55,7 @@ class GeminiVLMNode(Node):
         )
 
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        self.get_logger().info(f"Response: {response.output}")
+        # self.get_logger().info(f"Response: {response.output}")
 
 
 def main():
