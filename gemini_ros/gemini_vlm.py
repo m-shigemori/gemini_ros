@@ -12,12 +12,10 @@ class GeminiVLMNode(Node):
     def __init__(self):
         super().__init__('gemini_vlm_node')
 
-        api_key = os.environ.get('GEMINI_API_KEY')
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key=os.environ.get('GEMINI_API_KEY'))
 
         self.file_name = 'input.jpg'
 
-        # サービスを作成
         self.srv = self.create_service(
             GeminiRequest, '/gemini_vlm_service', self.handle_vlm_request
         )
@@ -42,7 +40,7 @@ class GeminiVLMNode(Node):
             model="gemini-2.0-flash",
             contents=[request.input, image],
             config={
-                # "max_output_tokens": 30,  # 必要に応じて設定
+                # "max_output_tokens": 30,
             }
         )
 

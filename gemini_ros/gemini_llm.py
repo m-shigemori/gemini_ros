@@ -24,7 +24,9 @@ class GeminiLLMNode(Node):
         gemini_response = self.client.models.generate_content(
             model="gemini-2.0-flash",
             contents=request.input,
-            config={"max_output_tokens": 30}
+            config={
+                # "max_output_tokens": 30,
+            }
         )
 
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()

@@ -12,14 +12,12 @@ class GeminiSTTNode(Node):
     def __init__(self):
         super().__init__('gemini_stt_node')
 
-        api_key = os.environ.get("GEMINI_API_KEY")
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
+        self.file_name = 'input.wav'
         self.samplerate = 44100
         self.duration = 5
-        self.FILE_NAME = 'input.wav'
 
-        # サービスの作成
         self.srv = self.create_service(
             GeminiRequest, '/gemini_stt_service', self.handle_stt_request
         )
@@ -35,18 +33,16 @@ class GeminiSTTNode(Node):
         self.get_logger().info('Recording audio...')
         audio_data = sd.rec(int(self.samplerate * self.duration), samplerate=self.samplerate, channels=1)
         sd.wait()
-        wav.write(self.FILE_NAME, self.samplerate, audio_data)
+        wav.write(self.file_name, self.samplerate, audio_data)
 
     def process_audio_and_generate_response(self, request, response):
-        # 音声ファイルをアップロード
-        sound_file = self.client.files.upload(file=self.FILE_NAME)
+        sound_file = self.client.files.upload(file=self.file_name)
 
-        # Gemini APIを使ってコンテンツを生成
         gemini_response = self.client.models.generate_content(
             model='gemini-2.0-flash',
             contents=[request.input, sound_file],
             config={
-                # "max_output_tokens": 30,  # 必要に応じて設定
+                # "max_output_tokens": 30,
             }
         )
 
