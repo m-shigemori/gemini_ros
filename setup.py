@@ -21,7 +21,6 @@ setup(
     maintainer_email='sobits@todo.todo',
     description='ROS2 package for running Gemini scripts',
     license='Apache License 2.0',
-    tests_require=['pytest'],
     entry_points={
         'console_scripts': [
             'gemini_llm = gemini_ros.gemini_llm:main',
