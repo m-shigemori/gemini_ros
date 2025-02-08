@@ -19,8 +19,6 @@ class GeminiLLMNode(Node):
         self.get_logger().info("Gemini LLM サービスが起動しました")
 
     def handle_llm_request(self, request, response):
-        self.get_logger().info(f"Received request: {request.input}")
-
         gemini_response = self.client.models.generate_content(
             model="gemini-2.0-flash",
             contents=request.input,

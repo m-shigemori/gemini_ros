@@ -14,7 +14,13 @@ class GeminiSTTNode(Node):
 
         self.client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-        self.file_name = 'input.wav'
+        workspace_directory = os.path.expanduser('~/colcon_ws/src/gemini_ros')
+        self.media_data_path = os.path.join(workspace_directory, 'media_data')
+
+        if not os.path.exists(self.media_data_path):
+            os.makedirs(self.media_data_path)
+
+        self.file_name = os.path.join(self.media_data_path, 'input.wav')
         self.samplerate = 44100
         self.duration = 5
 

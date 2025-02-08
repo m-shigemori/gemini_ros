@@ -14,7 +14,13 @@ class GeminiVLMNode(Node):
 
         self.client = genai.Client(api_key=os.environ.get('GEMINI_API_KEY'))
 
-        self.file_name = 'input.jpg'
+        workspace_directory = os.path.expanduser('~/colcon_ws/src/gemini_ros')
+        self.media_data_path = os.path.join(workspace_directory, 'media_data')
+
+        if not os.path.exists(self.media_data_path):
+            os.makedirs(self.media_data_path)
+
+        self.file_name = os.path.join(self.media_data_path, 'input.jpg')
 
         self.srv = self.create_service(
             GeminiRequest, '/gemini_vlm_service', self.handle_vlm_request
@@ -47,6 +53,7 @@ class GeminiVLMNode(Node):
         cleaned_response = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
         response.output = cleaned_response
         self.get_logger().info(f"Response: {cleaned_response}")
+
 
 def main():
     rclpy.init()
