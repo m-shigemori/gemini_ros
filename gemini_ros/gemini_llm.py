@@ -28,7 +28,7 @@ class GeminiLLMNode(Node):
         )
 
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        self.get_logger().info(f"Sending response: {response.output}")
+        self.get_logger().info(f"Response: {response.output}")
 
         return response
 
