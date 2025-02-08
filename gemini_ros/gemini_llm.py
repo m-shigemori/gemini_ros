@@ -2,8 +2,7 @@
 import os
 import rclpy
 from rclpy.node import Node
-from std_msgs.msg import String
-from gemini_ros.srv import GeminiRequest
+from gemini_intergace.srv import GeminiRequest
 from google import genai
 
 
@@ -11,27 +10,25 @@ class GeminiLLMNode(Node):
     def __init__(self):
         super().__init__("gemini_llm_node")
 
-        self.client = genai.Client(api_key = os.environ.get("GEMINI_API_KEY"))
+        self.client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
-        # サービスを定義
         self.srv = self.create_service(
             GeminiRequest, 'gemini_llm_service', self.handle_llm_request
         )
-        
+
         self.get_logger().info("Gemini LLM サービスが起動しました")
 
     def handle_llm_request(self, request, response):
-        self.get_logger().info(f"Received request: {request.request}")
+        self.get_logger().info(f"Received request: {request.input}")
 
-        # Gemini APIへのリクエスト
         gemini_response = self.client.models.generate_content(
             model="gemini-2.0-flash",
-            contents=request.request,
+            contents=request.input,
             config={"max_output_tokens": 30}
         )
 
-        response.response = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        self.get_logger().info(f"Sending response: {response.response}")
+        response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
+        self.get_logger().info(f"Sending response: {response.output}")
 
         return response
 
