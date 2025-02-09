@@ -9,6 +9,7 @@ import PIL.Image
 from google import genai
 from cv_bridge import CvBridge
 
+
 class GeminiVLMNode(Node):
     def __init__(self):
         super().__init__('gemini_vlm_node')
@@ -21,7 +22,12 @@ class GeminiVLMNode(Node):
         if not os.path.exists(self.media_data_path):
             os.makedirs(self.media_data_path)
 
-        self.file_name = os.path.join(self.media_data_path, 'input.jpg')
+        self.file_counter = 1
+        self.image_data = None
+
+        self.subscription = self.create_subscription(
+            Image, '/camera/camera/color/image_raw', self.image_callback, 10
+        )
 
         self.srv = self.create_service(
             GeminiRequest, '/gemini_vlm_service', self.handle_vlm_request
@@ -29,22 +35,22 @@ class GeminiVLMNode(Node):
 
         self.get_logger().info("Gemini VLM サービスが起動しました")
 
+    def image_callback(self, msg):
+        self.image_data = msg
+
     def handle_vlm_request(self, request, response):
         self.capture_image()
         self.process_image_and_response(request, response)
         return response
 
     def capture_image(self):
-        client = self.create_client(Image, '/camera/camera/color/image_raw')
-        future = client.call_async()
-        rclpy.spin_until_future_complete(self, future)
-        image_msg = future.result()
-
-        cv_image = CvBridge().imgmsg_to_cv2(image_msg)
-        cv2.imwrite(self.file_name, cv_image)
+        file_name = os.path.join(self.media_data_path, f'input_{self.file_counter}.jpg')
+        cv_image = CvBridge().imgmsg_to_cv2(self.image_data)
+        cv2.imwrite(file_name, cv_image)
 
     def process_image_and_response(self, request, response):
-        image = PIL.Image.open(self.file_name)
+        file_name = os.path.join(self.media_data_path, f'input_{self.file_counter}.jpg')
+        image = PIL.Image.open(file_name)
 
         gemini_response = self.client.models.generate_content(
             model="gemini-2.0-flash",
@@ -55,7 +61,8 @@ class GeminiVLMNode(Node):
         )
 
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        # self.get_logger().info(f"Response: {response.output}")
+
+        self.file_counter += 1
 
 
 def main():

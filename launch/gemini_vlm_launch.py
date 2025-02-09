@@ -27,5 +27,5 @@ def generate_launch_description():
 
     return LaunchDescription([
         gemini_vlm_node,
-        # realsense_launch
+        realsense_launch
     ])
