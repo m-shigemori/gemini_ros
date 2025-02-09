@@ -63,6 +63,7 @@ class GeminiVLMNode(Node):
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
 
         self.file_counter += 1
+        self.get_logger().info(f"Response: {response.output}")
 
 
 def main():

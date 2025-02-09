@@ -28,8 +28,8 @@ setup(
             'gemini_stt = gemini_ros.gemini_stt:main',
             'gemini_vlm = gemini_ros.gemini_vlm:main',
             
-            'vlm_test = restaurant.vlm_test:main',
-            'stt_test = restaurant.stt_test:main',
+            'vlm_test = gemini_ros.vlm_test:main',
+            'stt_test = gemini_ros.stt_test:main',
         ],
     },
 )

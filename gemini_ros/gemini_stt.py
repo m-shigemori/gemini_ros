@@ -20,7 +20,8 @@ class GeminiSTTNode(Node):
         if not os.path.exists(self.media_data_path):
             os.makedirs(self.media_data_path)
 
-        self.file_name = os.path.join(self.media_data_path, 'input.wav')
+        self.file_counter = 1
+        self.file_name = None
         self.samplerate = 44100
         self.duration = 5
 
@@ -37,6 +38,7 @@ class GeminiSTTNode(Node):
 
     def record_audio(self):
         self.get_logger().info('Recording audio...')
+        self.file_name = os.path.join(self.media_data_path, f'input_{self.file_counter}.wav')
         audio_data = sd.rec(int(self.samplerate * self.duration), samplerate=self.samplerate, channels=1)
         sd.wait()
         wav.write(self.file_name, self.samplerate, audio_data)
@@ -53,9 +55,9 @@ class GeminiSTTNode(Node):
         )
 
         response.output = gemini_response.text.replace('*', '').replace('\n', ' ').strip()
-        self.get_logger().info(f"Response: {response.output}")
 
-        return response
+        self.file_counter += 1
+        self.get_logger().info(f"Response: {response.output}")
 
 def main():
     rclpy.init()

@@ -27,8 +27,24 @@ def main():
     rclpy.init()
     client = GeminiSTTClient()
 
+    menu_items = [
+            "Noodles",
+            "Gummy",
+            "Cookie",
+            "Potato Chips",
+            "Coffee",
+            "Apple_Juice",
+            "Green_Tea"
+        ]
+
     try:
-        input_data = "文字に起こして"
+        input_data = (
+        f"注文音声を聞いてください。"
+        f"お客様が以下のメニューから1つまたは複数の商品を注文しています："
+        f"{', '.join(menu_items)}。"
+        f"音声の中で注文された商品の名前のみを英語で出力してください。"
+        )
+
         client.call_service(input_data)
     except KeyboardInterrupt:
         pass
