@@ -3,16 +3,16 @@
   <name>gemini_ros</name>
   <version>0.0.1</version>
   <description>ROS2 package for running Gemini scripts</description>
-  <maintainer email="sobits@todo.todo">sobits</maintainer>
+  <maintainer email="yasumasashige790@gmail.com">shigemori</maintainer>
   <license>Apache License 2.0</license>
 
   <build_depend>ament_cmake</build_depend>
   <build_depend>ament_python</build_depend>
-  <build_depend>gemini_interface</build_depend> <!-- gemini_interface パッケージの追加 -->
+  <build_depend>gemini_interface</build_depend>
 
   <exec_depend>rclpy</exec_depend>
   <exec_depend>std_msgs</exec_depend>
-  <exec_depend>gemini_interface</exec_depend> <!-- gemini_interface パッケージの追加 -->
+  <exec_depend>gemini_interface</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>

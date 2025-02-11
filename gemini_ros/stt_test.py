@@ -29,9 +29,9 @@ def main():
 
     try:
         input_data = (f"お客から注文内容を確認した後のレスポンスです"
-                             f"注文内容が正しかった場合「yes」,"
-                             f"違う場合や訂正したい場合は「no」と答えてください"
-                             )
+                      f"注文内容が正しかった場合「yes」"
+                      f"違う場合や訂正したい場合は「no」と答えてください"
+                      )
 
         client.call_service(input_data)
     except KeyboardInterrupt:

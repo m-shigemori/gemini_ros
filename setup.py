@@ -19,7 +19,7 @@ setup(
     install_requires=['setuptools', 'gemini_interface'],
     zip_safe=False,
     maintainer='sobits',
-    maintainer_email='sobits@todo.todo',
+    maintainer_email='yasumasashige790@gmail.com',
     description='ROS2 package for running Gemini scripts',
     license='Apache License 2.0',
     entry_points={
