@@ -16,7 +16,7 @@ setup(
             'launch/gemini_vlm_launch.py',
         ]),
     ],
-    install_requires=['setuptools', 'gemini_interface'],
+    install_requires=["setuptools"],
     zip_safe=False,
     maintainer='sobits',
     maintainer_email='yasumasashige790@gmail.com',

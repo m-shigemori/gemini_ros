@@ -8,24 +8,12 @@ from launch_ros.substitutions import FindPackageShare
 
 def generate_launch_description():
 
-    gemini_vlm_node = Node(
-        package='gemini_ros',
-        executable='gemini_vlm',
-        name='gemini_vlm_node',
-        output='screen',
-    )
-
-    realsense_launch = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('realsense2_camera'),
-                'launch',
-                'rs_launch.py'
-            ])
-        ])
-    )
-
     return LaunchDescription([
-        gemini_vlm_node,
-        realsense_launch
+        Node(
+            package="gemini_ros",
+            executable="gemini_vlm",
+            name="gemini_vlm_node",
+            output="screen",
+            emulate_tty=True
+        )
     ])
