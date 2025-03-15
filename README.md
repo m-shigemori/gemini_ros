@@ -2,8 +2,7 @@
 
 このリポジトリは、Google Gemini APIを利用して、音声認識（STT）、画像認識（VLM）、テキスト生成（LLM）を行うROS2インターフェースを提供します。これにより、音声や画像データを入力として、AIモデルによるテキスト生成や解析が可能になります。
 
----
-
+&nbsp;
 ## サービスの概要
 
 - **LLM (Large Language Model)**:  
@@ -15,6 +14,7 @@
 - **VLM (Vision-Language Model)**:  
   カメラからの画像を入力として受け取り、それに基づいたテキストを生成します。
 
+&nbsp;  
 ## 依存関係のインストール
 
 まず、必要なパッケージをインストールします。これには音声データの録音、Google Gemini APIとの接続、および画像データ処理に必要なライブラリが含まれます。
@@ -35,10 +35,12 @@ echo "export GEMINI_API_KEY=AIzaSyCg-8enfQnTDdiK4txTXqr0fEH7ThASKG4 >> ~/.bashrc
 
 これにより、音声録音用の`portaudio`、音声データ処理用の`sounddevice`、およびGoogle Gemini APIを利用するための`google-genai`ライブラリがインストールされます。
 
+&nbsp;  
 ## サービスの立ち上げ方法
 
 以下に、各サービスを起動するための`launch`ファイルを使用した方法を示します。
 
+&nbsp;  
 ### 1. Gemini LLM サービス（テキスト生成）
 
 #### ノードの起動
@@ -65,6 +67,7 @@ ros2 service call /gemini_llm_service gemini_interface/srv/GeminiRequest "input:
 ros2 service call /gemini_llm_service gemini_interface/srv/GeminiRequest "input: 'おすすめ商品を教えてください'"
 ```
 
+&nbsp;  
 ### 2. Gemini STT サービス（音声認識）
 
 #### ノードの起動
@@ -91,6 +94,7 @@ ros2 service call /gemini_stt_service gemini_interface/srv/GeminiRequest "input:
 ros2 service call /gemini_stt_service gemini_interface/srv/GeminiRequest "input: '会話を続けてください'"
 ```
 
+&nbsp;  
 ### 3. Gemini VLM サービス（画像認識）
 
 #### ノードの起動
@@ -117,6 +121,7 @@ ros2 service call /gemini_vlm_service gemini_interface/srv/GeminiRequest "input:
 ros2 service call /gemini_vlm_service gemini_interface/srv/GeminiRequest "input: 'この画像を見て、何が写っているか教えて'"
 ```
 
+&nbsp;  
 ## 注意点
 
 - **会話のコンテキスト維持ができていない**:  
