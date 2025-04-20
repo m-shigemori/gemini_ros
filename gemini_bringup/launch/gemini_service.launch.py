@@ -15,7 +15,7 @@ def generate_launch_description():
 
     api_key_arg = DeclareLaunchArgument(
         "api_key",
-        default_value="Your Gemini API Key",
+        default_value="AIzaSyA3su5lYmGcxox8u3e2y91an2yn70llDF0",
         description="Gemini API Key",
     )
 
