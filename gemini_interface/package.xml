@@ -3,15 +3,15 @@
 <package format="3">
   <name>gemini_interface</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="yasumasashige790@gmail.com">sobits</maintainer>
-  <license>TODO: License declaration</license>
-
-  <member_of_group>rosidl_interface_packages</member_of_group>
+  <description>ROS2 package for running Gemini intergace</description>
+  <maintainer email="yasumasashige790@gmail.com">shigemori</maintainer>
+  <license>Apache License 2.0</license>
 
   <build_depend>ament_cmake</build_depend>
   <build_depend>rosidl_default_generators</build_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
     <build_type>ament_cmake</build_type>

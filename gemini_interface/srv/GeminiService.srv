@@ -1,0 +1,6 @@
+string mode              # LLM or VLM or STT
+string prompt            # Use in ALL
+string image_file_path   # Use in VLM
+string audio_file_path   # Use in STT
+---
+string response          # 応答
