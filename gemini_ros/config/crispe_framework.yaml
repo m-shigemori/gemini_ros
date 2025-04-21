@@ -9,8 +9,8 @@ gemini_service_server:
     statement: "\
       [指示]\
       出力にはMarkdown形式は使用しないでください。\
-      丁寧に対応してください\
-      出力内容と形式に関しては[Prompt]に従ってください
+      丁寧に対応してください。\
+      出力内容と形式に関しては[Prompt]に従ってください。\
       "
     personality: "\
       "
