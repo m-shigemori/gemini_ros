@@ -1,4 +1,6 @@
-# gemini_ros
+# Gemini ROS2
+
+![gemini_ros package image](gemini_ros.jpg)
 
 このパッケージは、GoogleのGeminiモデルをROS 2環境で利用するための機能を提供します。
 
@@ -38,7 +40,7 @@
 2. このパッケージをROS 2ワークスペースの `src` ディレクトリにクローンします。
    ```bash
    cd ~/colcon_ws/src
-   git clone https://github.com/m-shigemori/gemini_ros.git
+   git clone https://github.com/TeamSOBITS/gemini_ros.git
    ```
 3. 依存関係スクリプトの実行
    ```bash
@@ -111,5 +113,5 @@
 
 ## 注意事項
 
-- Gemini APIの利用にはAPIキーが必要です。安全にAPIキーを管理してください。設定ファイルに直接記述するのではなく、環境変数など安全な方法で渡すことを検討してください。
+- Gemini APIの利用にはAPIキーが必要です。安全にAPIキーを管理してください。launchファイルに直接記述してください(環境変数のほうが良かったかも…)。
 - VLMモードおよびSTTモードでは、指定された画像ファイルまたは音声ファイルが存在することを確認してください。
